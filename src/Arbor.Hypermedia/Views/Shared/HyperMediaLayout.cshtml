@@ -1,0 +1,36 @@
+﻿@model Arbor.Hypermedia.IHyperMediaControl
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+
+        .identity {
+            display: inline-block;
+            font-size: 2em;
+        }
+
+        .entity {
+            display: block;
+            border: 1px solid black;
+        }
+
+        .h-context, .h-id {
+            font-size: 2em;
+        }
+
+    </style>
+</head>
+<body>
+
+<div>
+    @{
+        await Html.RenderPartialAsync("HyperMediaView", Model);
+    }
+</div>
+
+</body>
+</html>

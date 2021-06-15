@@ -1,0 +1,129 @@
+﻿@using Arbor.Hypermedia
+@using Microsoft.AspNetCore.Http.Extensions
+@model IHyperMediaControl
+@{
+    Layout = null;
+}
+
+@functions
+{
+    private CustomHttpMethod GetMethod(HyperMediaForm form)
+    {
+        if (form.HttpMethod == CustomHttpMethod.Delete || form.HttpMethod == CustomHttpMethod.Put)
+        {
+            return CustomHttpMethod.Post;
+        }
+
+        if (form.HttpMethod == CustomHttpMethod.Head || form.HttpMethod == CustomHttpMethod.Options)
+        {
+            return CustomHttpMethod.Get;
+        }
+
+        return form.HttpMethod;
+    }
+
+    void MethodCompatibility(HyperMediaForm form)
+    {
+        if (form.HttpMethod != CustomHttpMethod.Post && form.HttpMethod != CustomHttpMethod.Get)
+        {
+            <input type="hidden" name="_method" value="@form.HttpMethod"/>
+        }
+    }
+}
+
+@if (Model is HyperMediaLink hyperMediaLink && hyperMediaLink.Relation != LinkRelation.Self)
+{
+    <div class="link">
+        <span class="h-rel">@hyperMediaLink.Relation</span>
+        <a href="@hyperMediaLink.Href" rel="@hyperMediaLink.Relation">
+            <span class="href">@hyperMediaLink.Href</span>
+        </a>
+    </div>
+}
+
+@if (Model is HyperMediaEntity entity)
+{
+    <div class="entity" id="@entity.Id" data-entity-context="@entity.Context">
+        <p>
+            <span class="h-context">@entity.Context</span>
+            <a href="@Context.Request.GetEncodedUrl()" rel="@LinkRelation.Self">
+                <span class="h-id">@entity.Id</span>
+            </a>
+
+        </p>
+
+        @foreach (var item in entity.Controls)
+        {
+            await Html.RenderPartialAsync("HyperMediaView", item);
+        }
+    </div>
+}
+
+@if (Model is ObjectControl objectControl)
+{
+    <div>
+        @foreach (var item in objectControl.Properties)
+        {
+            <div class="property">
+                @if (bool.TryParse(item.Value, out bool boolProperty))
+                {
+                    <label for="@item.Key" class="propertyName">@item.Key</label>
+                    <input type="checkbox" value="@boolProperty.ToString().ToLowerInvariant()" class="h-@item.Key" id="@item.Key" @boolProperty.Checked() disabled="disabled"/>
+                }
+                else
+                {
+                    <span class="propertyName">@item.Key</span>
+                    <span class="h-@item.Key">@item.Value</span>
+                }
+            </div>
+        }
+    </div>
+}
+
+@if (Model is HyperMediaForm hyperMediaForm)
+{
+    <form method="@GetMethod(hyperMediaForm)" action="@hyperMediaForm.Href" data-method="@hyperMediaForm.HttpMethod">
+
+        <fieldset>
+            <legend>@hyperMediaForm.LinkRelation</legend>
+
+            @{
+                MethodCompatibility(hyperMediaForm);
+            }
+
+            @foreach (HyperMediaFormField hyperMediaFormField in hyperMediaForm.FormFields)
+            {
+                if (hyperMediaFormField is StringFormField formField)
+                {
+                    <label for="@formField.Name">@formField.Name</label>
+                    <input type="text" name="@formField.Name" id="@formField.Name"/>
+                }
+
+                if (hyperMediaFormField is ReferenceFormField referenceFormField)
+                {
+                    <input type="hidden" name="@referenceFormField.Name" value="@referenceFormField.ReferenceValue"/>
+                }
+
+                if (hyperMediaFormField is SingleSelectionFormField singleSelectionFormField)
+                {
+                    <label for="@singleSelectionFormField.Name">@singleSelectionFormField.Name</label>
+                    <select name="@singleSelectionFormField.Name" id="@singleSelectionFormField.Name">
+
+                        @foreach (SelectionOption selectionOption in singleSelectionFormField.Options)
+                        {
+                            <option value="@selectionOption.Value">@selectionOption.Key</option>
+                        }
+
+                    </select>
+                }
+
+                if (hyperMediaFormField is DateFormField dateFormField)
+                {
+                    <input type="date" name="@dateFormField.Name" value="@dateFormField.DefaultValue"/>
+                }
+            }
+
+            <button type="submit">@hyperMediaForm.LinkRelation.Name</button>
+        </fieldset>
+    </form>
+}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Arbor.App.Extensions.ExtensionMethods;
+using Arbor.ModelBinding.Primitives;
 
 namespace Arbor.Hypermedia
 {
@@ -61,14 +62,17 @@ namespace Arbor.Hypermedia
         {
             foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (item.PropertyType.IsAssignableTo(typeof(DateTime?)))
+                if (metadata.RouteMethod == CustomHttpMethod.Put && item.Name == "Id")
                 {
-                    yield return new DateFormField(item.Name);
+                    continue;
                 }
-
+                if (item.PropertyType.Closes(typeof(ValueObjectBase<>)))
+                {
+                    yield return new StringFormField(item.Name, item.GetValue(metadata.Entity)?.ToString());
+                }
                 else if (item.PropertyType.IsAssignableTo(typeof(DateTime?)))
                 {
-                    yield return new StringFormField(item.Name);
+                    yield return new DateFormField(item.Name);
                 }
                 else if (item.PropertyType == typeof(EntityContext))
                 {

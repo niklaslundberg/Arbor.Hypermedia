@@ -4,8 +4,11 @@ namespace Arbor.Hypermedia
 {
     public class StringFormField : HyperMediaFormField
     {
-        public StringFormField([NotNull] string name) : base(name)
+        public string? Value { get; }
+
+        public StringFormField([NotNull] string name, string? value = null) : base(name)
         {
+            Value = value;
         }
     }
 }

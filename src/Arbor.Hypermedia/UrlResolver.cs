@@ -12,21 +12,31 @@ namespace Arbor.Hypermedia
 
         public UrlResolver(IUrlHelper urlHelper) => _urlHelper = urlHelper;
 
-        public Uri GetUrl(EntityMetadata entityMetadata)
+        public Uri GetUrl(EntityMetadata metadata)
         {
-            var routeValues = new ExpandoObject();
+            object? GetRouteValues()
+            {
+                if (string.IsNullOrWhiteSpace(metadata.RouteParameterName))
+                {
+                    return null;
+                }
 
-            IDictionary<string, object?> dictionary = routeValues;
+                var routeValues = new ExpandoObject();
 
-            dictionary.Add(entityMetadata.RouteParameterName, entityMetadata.Entity.Context.Id);
+                IDictionary<string, object?> dictionary = routeValues;
+                
+                dictionary.Add(metadata.RouteParameterName, metadata.Entity.Context.Id);
 
-            var context = new UrlRouteContext {RouteName = entityMetadata.RouteName, Values = routeValues};
+                return routeValues;
+            }
+
+            var context = new UrlRouteContext {RouteName = metadata.RouteName, Values = GetRouteValues()};
 
             string? uriString = _urlHelper.RouteUrl(context);
 
             if (string.IsNullOrWhiteSpace(uriString))
             {
-                throw new InvalidOperationException($"A route url could not be found for entity meta {entityMetadata}");
+                throw new InvalidOperationException($"A route url could not be found for entity meta {metadata}");
             }
 
             var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);

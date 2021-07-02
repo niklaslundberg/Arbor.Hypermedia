@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		version.json = version.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arbor.Hypermedia.Tests", "Arbor.Hypermedia.Tests\Arbor.Hypermedia.Tests.csproj", "{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{605A9DF8-49CC-4B2D-A8C9-CA76F7BBA2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{605A9DF8-49CC-4B2D-A8C9-CA76F7BBA2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{605A9DF8-49CC-4B2D-A8C9-CA76F7BBA2F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -96,7 +96,7 @@
                 if (hyperMediaFormField is StringFormField formField)
                 {
                     <label for="@formField.Name">@formField.Name</label>
-                    <input type="text" name="@formField.Name" id="@formField.Name"/>
+                    <input type="text" name="@formField.Name" id="@formField.Name" value="@formField.Value"/>
                 }
 
                 if (hyperMediaFormField is ReferenceFormField referenceFormField)

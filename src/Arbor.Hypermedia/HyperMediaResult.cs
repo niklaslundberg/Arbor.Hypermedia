@@ -1,10 +1,7 @@
-﻿using System.IO;
+﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Arbor.Hypermedia
@@ -15,10 +12,10 @@ namespace Arbor.Hypermedia
 
         public HyperMediaResult(HyperMediaBuilder hyperMediaBuilder) => _hyperMediaBuilder = hyperMediaBuilder;
 
-        public async Task<IActionResult> ToHyperMediaResult<T>(Controller controller, T? identifiable)
+        public async Task<IActionResult> ToHyperMediaResult<T>(Controller controller, T? metadataEntity)
             where T : IMetadata
         {
-            if (identifiable is null)
+            if (metadataEntity is null)
             {
                 return new NotFoundResult();
             }
@@ -27,25 +24,20 @@ namespace Arbor.Hypermedia
 
             const string viewPath = "~/Views/Shared/HyperMediaLayout.cshtml";
 
-            var viewResult = viewEngine.GetView(viewPath, viewPath, false);
+            var viewResult = viewEngine.GetView(viewPath, viewPath, isMainPage: false);
 
-            var entityMetadata = identifiable.CreateMetadata();
+            if (viewResult.View is null)
+            {
+                throw new InvalidOperationException($"Could not find view {viewPath}");
+            }
 
-            await using TextWriter writer = new StreamWriter(controller.HttpContext.Response.Body, leaveOpen: true);
+            var entityMetadata = metadataEntity.CreateMetadata();
 
             var urlResolver = new UrlResolver(controller.Url);
 
-            controller.ViewData.Model = await _hyperMediaBuilder.GetControl(entityMetadata, urlResolver);
+            var model = await _hyperMediaBuilder.GetControl(entityMetadata, urlResolver);
 
-            ViewContext viewContext =
-                new(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, writer,
-                    new HtmlHelperOptions());
-
-            await viewResult.View.RenderAsync(viewContext);
-
-            await writer.FlushAsync();
-
-            return new StatusCodeResult(StatusCodes.Status200OK);
+            return controller.View(viewResult.ViewName, model);
         }
     }
 }

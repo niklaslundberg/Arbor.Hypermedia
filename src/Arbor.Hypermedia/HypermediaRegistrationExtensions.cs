@@ -14,7 +14,11 @@ namespace Arbor.Hypermedia
 
             var thisAssembly = typeof(HypermediaRegistrationExtensions).Assembly;
 
-            services.AddMvc()
+            services.AddMvc(options =>
+                {
+                    //options.OutputFormatters.Add(new HtmlHyperMediaFormatter()); // TODO make formatter use dependencies
+                })
+
                 .ConfigureApplicationPartManager(
                     applicationPartManager =>
                         applicationPartManager.ApplicationParts.Add(new AssemblyPart(thisAssembly)))

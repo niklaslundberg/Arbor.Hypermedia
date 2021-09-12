@@ -14,9 +14,7 @@ namespace Arbor.Hypermedia
         {
             var hyperMediaControls = GetControls(metadata, urlResolver);
 
-            var hyperMediaEntity = new HyperMediaEntity(metadata.Entity.Context.Id, metadata.Entity.GetType().Name, hyperMediaControls);
-
-            return hyperMediaEntity;
+            return new HyperMediaEntity(metadata.Entity.Context.Id, metadata.Entity.GetType().Name, hyperMediaControls);
         }
 
         public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver)
@@ -30,8 +28,7 @@ namespace Arbor.Hypermedia
 
             var properties = new Dictionary<string, string>();
 
-            foreach (var item in Enumerable.Where<PropertyInfo>(metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance),
-                                              property => property.PropertyType.IsPrimitive))
+            foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property => property.PropertyType.IsPrimitive))
             {
                 string? value = item.GetValue(metadata.Entity)?.ToString();
 

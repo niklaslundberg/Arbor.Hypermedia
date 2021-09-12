@@ -16,7 +16,7 @@ namespace Arbor.Hypermedia
 
             services.AddMvc(options =>
                 {
-                    //options.OutputFormatters.Add(new HtmlHyperMediaFormatter()); // TODO make formatter use dependencies
+                    //options.OutputFormatters.Add(new HtmlHypermediaFormatter2()); // TODO make formatter use dependencies
                 })
 
                 .ConfigureApplicationPartManager(

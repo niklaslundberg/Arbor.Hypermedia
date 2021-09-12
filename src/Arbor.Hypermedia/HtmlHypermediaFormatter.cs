@@ -15,10 +15,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Arbor.Hypermedia
 {
-    public class HtmlHypermediaFormatter2: IOutputFormatter
+    public class HtmlHypermediaFormatter: IOutputFormatter
     {
         private ITempDataProvider _tempDataProvider;
-        public HtmlHypermediaFormatter2(ITempDataProvider tempDataProvider)
+        public HtmlHypermediaFormatter(ITempDataProvider tempDataProvider)
         {
             _tempDataProvider = tempDataProvider;
         }

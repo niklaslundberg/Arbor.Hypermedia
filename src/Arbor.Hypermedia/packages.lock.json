@@ -29,9 +29,9 @@
       },
       "Arbor.ModelBinding.Primitives": {
         "type": "Direct",
-        "requested": "[2.1.0-build.1623440927, )",
-        "resolved": "2.1.0-build.1630609685",
-        "contentHash": "vq+63Uli2mwMj0zlQwwkRGXJYxRq2FTOP6HkyK8dWMpNjvxWw53fi2hmLWNfKIIQDpjD+pca+GdPUSniox18Xw==",
+        "requested": "[*-*, )",
+        "resolved": "2.1.0-build.1631437412",
+        "contentHash": "KmkiibkQey5kg2Jn/HJyjTUWFpVhq3NGdEbecjYMYalLCtFhkDjo3nlIVdn6O6fZU6OgMtVs5oVHSTUy2k3CxA==",
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
           "System.Text.Json": "5.0.2"

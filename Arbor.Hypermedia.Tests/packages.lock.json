@@ -5,8 +5,8 @@
       "Arbor.ModelBinding.Generators": {
         "type": "Direct",
         "requested": "[2.1.0-build.1623440927, )",
-        "resolved": "2.1.0-build.1630609685",
-        "contentHash": "/jD9zNF+r7IRlx2lgG00ppSS7z9wMRUegnLPAbSTT+fZjasX6uAi8EnGmJd2BYUKGGEIkrrmGQI6y3NXTA65Sw==",
+        "resolved": "2.1.0-build.1623440927",
+        "contentHash": "74nirgtJuDfTnl+o0XZqhc2NSUlqzvtpoNOyWAyUBj2yZ5/fYxuFNsCfzjuKaYzDR78I1++pTfJSdbQSKRsBJQ==",
         "dependencies": {
           "System.ComponentModel.Annotations": "5.0.0"
         }
@@ -104,8 +104,8 @@
       },
       "Arbor.ModelBinding.Primitives": {
         "type": "Transitive",
-        "resolved": "2.1.0-build.1630609685",
-        "contentHash": "vq+63Uli2mwMj0zlQwwkRGXJYxRq2FTOP6HkyK8dWMpNjvxWw53fi2hmLWNfKIIQDpjD+pca+GdPUSniox18Xw==",
+        "resolved": "2.1.0-build.1631437412",
+        "contentHash": "KmkiibkQey5kg2Jn/HJyjTUWFpVhq3NGdEbecjYMYalLCtFhkDjo3nlIVdn6O6fZU6OgMtVs5oVHSTUy2k3CxA==",
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
           "System.Text.Json": "5.0.2"
@@ -1361,7 +1361,7 @@
         "type": "Project",
         "dependencies": {
           "Arbor.App.Extensions": "0.8.0",
-          "Arbor.ModelBinding.Primitives": "2.1.0-build.1623440927",
+          "Arbor.ModelBinding.Primitives": "0.0.0-0",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "0.0.0",
           "Microsoft.Extensions.FileProviders.Embedded": "0.0.0"
         }

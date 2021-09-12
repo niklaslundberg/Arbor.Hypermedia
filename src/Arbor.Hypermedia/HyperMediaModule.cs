@@ -6,6 +6,6 @@ namespace Arbor.Hypermedia
     public class HyperMediaModule : IModule
     {
         public IServiceCollection Register(IServiceCollection builder) =>
-            builder.AddScoped<HyperMediaResult>().AddScoped<HyperMediaBuilder>();
+            builder.AddScoped<HyperMediaBuilder>();
     }
 }

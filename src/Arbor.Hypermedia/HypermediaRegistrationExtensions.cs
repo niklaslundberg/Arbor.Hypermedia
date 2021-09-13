@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,19 +13,34 @@ namespace Arbor.Hypermedia
         {
             services.AddScoped<HyperMediaBuilder>();
 
-            var thisAssembly = typeof(HypermediaRegistrationExtensions).Assembly;
+            services.AddMvc().RegisterHypermediaAssembly().AddRazorRuntimeCompilation();
 
-            services.AddMvc(options => options.OutputFormatters.Insert(0, new HtmlHypermediaFormatter()))
-                    .ConfigureApplicationPartManager(applicationPartManager =>
-                         applicationPartManager.ApplicationParts.Add(new AssemblyPart(thisAssembly)))
-                    .AddRazorRuntimeCompilation();
-
-            services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
-                options.FileProviders.Add(new EmbeddedFileProvider(thisAssembly)));
+            services.AddHypermediaFileProvider();
+            services.AddHypermediaOutputFormatter();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             return services;
         }
+
+        private static IServiceCollection AddHypermediaFileProvider(this IServiceCollection services)
+        {
+            var thisAssembly = typeof(HypermediaRegistrationExtensions).Assembly;
+
+            return services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
+                options.FileProviders.Add(new EmbeddedFileProvider(thisAssembly)));
+        }
+
+        public static IMvcBuilder RegisterHypermediaAssembly(this IMvcBuilder options)
+        {
+            var thisAssembly = typeof(HypermediaRegistrationExtensions).Assembly;
+
+            return options.ConfigureApplicationPartManager(applicationPartManager =>
+                applicationPartManager.ApplicationParts.Add(new AssemblyPart(thisAssembly)));
+        }
+
+        public static IServiceCollection AddHypermediaOutputFormatter(this IServiceCollection serviceCollection) =>
+            serviceCollection.Configure<MvcOptions>(options =>
+                options.OutputFormatters.Insert(0, new HtmlHypermediaFormatter()));
     }
 }

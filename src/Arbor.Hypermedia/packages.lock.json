@@ -31,7 +31,7 @@
         "type": "Direct",
         "requested": "[2.2.0, )",
         "resolved": "2.2.0",
-        "contentHash": "9S6DJ1wMLhQU2PaQmuSaHz03XKi67CIslo/N6J2gHKKLx/DdvCE+Yk7vtKWBQqQn6VuWT24dziVdq/2zU7pl5Q==",
+        "contentHash": "QCXCtqQ3COZeashitmR68/87XKjSYARiY+990hnRRns/ojoSdsqAI3M6pEBDpwTfgcRUdhu8n8FLXlRd58xmVQ==",
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
           "System.Text.Json": "6.0.0"

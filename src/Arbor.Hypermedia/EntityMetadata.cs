@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using Arbor.App.Extensions.ExtensionMethods;
+using Arbor.AppModel.ExtensionMethods;
 
 namespace Arbor.Hypermedia
 {

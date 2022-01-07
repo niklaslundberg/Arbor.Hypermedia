@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Arbor.App.Extensions.Time;
+using Arbor.AppModel.Time;
 
 namespace Arbor.Hypermedia
 {

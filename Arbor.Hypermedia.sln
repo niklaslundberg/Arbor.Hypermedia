@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31402.337
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arbor.Hypermedia", "src\Arbor.Hypermedia\Arbor.Hypermedia.csproj", "{605A9DF8-49CC-4B2D-A8C9-CA76F7BBA2F0}"
 EndProject
@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		build\build.bat = build\build.bat
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
@@ -18,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		version.json = version.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arbor.Hypermedia.Tests", "Arbor.Hypermedia.Tests\Arbor.Hypermedia.Tests.csproj", "{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arbor.Hypermedia.Tests", "Arbor.Hypermedia.Tests\Arbor.Hypermedia.Tests.csproj", "{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

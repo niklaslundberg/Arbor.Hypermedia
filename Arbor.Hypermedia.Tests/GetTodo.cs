@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Arbor.Hypermedia.Tests
 {
@@ -8,12 +9,13 @@ namespace Arbor.Hypermedia.Tests
 
         internal record TodoMetadata : EntityMetadata
         {
-            public TodoMetadata(TodoItem.TodoItemView entity, IEnumerable<EntityMetadata>? actions) : base(
+            public TodoMetadata(TodoItem.TodoItemView entity, IEnumerable<EntityMetadata>? actions, IEnumerable<EntityMetadata>? items) : base(
                 entity,
                 GetTodo.RouteName,
                 "id",
                 CustomHttpMethod.Get,
-                actions)
+                actions,
+                items)
             {
             }
         }

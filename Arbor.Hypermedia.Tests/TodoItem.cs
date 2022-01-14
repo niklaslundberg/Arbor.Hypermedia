@@ -26,7 +26,7 @@ namespace Arbor.Hypermedia.Tests
 
         public string? Comment { get; private set; }
 
-        public EntityMetadata CreateMetadata() => new GetTodo.TodoMetadata(new TodoItemView(Id), GetActions());
+        public EntityMetadata CreateMetadata() => new GetTodo.TodoMetadata(new TodoItemView(Id), GetActions(), GetRelations());
 
         private IEnumerable<EntityMetadata> GetActions()
         {
@@ -36,6 +36,10 @@ namespace Arbor.Hypermedia.Tests
             }
 
             yield return new TodoComment.Metadata(new TodoComment(Id,Comment ?? ""));
+        }
+        private IEnumerable<EntityMetadata> GetRelations()
+        {
+            yield return new GetTodoList.TodoListMetadata(new TodoListView());
         }
 
         public class TodoItemView : IEntity

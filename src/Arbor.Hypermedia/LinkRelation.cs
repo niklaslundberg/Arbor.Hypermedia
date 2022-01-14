@@ -4,7 +4,13 @@
     {
         public static readonly LinkRelation Self = new(nameof(Self));
 
-        public LinkRelation(string name) => Name = name.ToLowerInvariant();
+        public LinkRelation(string name)
+        {
+            FriendlyName = name;
+            Name = name.ToLowerInvariant();
+        }
+
+        public string FriendlyName { get; set; }
 
         public string Name { get; }
 

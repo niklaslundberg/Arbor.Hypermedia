@@ -21,7 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arbor.Hypermedia.Tests", "Arbor.Hypermedia.Tests\Arbor.Hypermedia.Tests.csproj", "{0DD590BD-AC94-44E5-A45E-A8E3785B1B49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arbor.HyperMedia.Sample", "samples\Arbor.HyperMedia.Sample\Arbor.HyperMedia.Sample.csproj", "{10A29B33-E6A6-48DE-9394-F4B92BC37557}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arbor.HyperMedia.Sample", "samples\Arbor.HyperMedia.Sample\Arbor.HyperMedia.Sample.csproj", "{10A29B33-E6A6-48DE-9394-F4B92BC37557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arbor.Hypermedia.Generators", "Arbor.Hypermedia.Generators\Arbor.Hypermedia.Generators.csproj", "{3E234A67-EF03-493A-B4AB-1DDECC6734AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arbor.Hypermedia.Generators.Tests", "Arbor.Hypermedia.Generators.Tests\Arbor.Hypermedia.Generators.Tests.csproj", "{A302514D-B13D-4E74-B93B-BFE0AA3B6A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{10A29B33-E6A6-48DE-9394-F4B92BC37557}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10A29B33-E6A6-48DE-9394-F4B92BC37557}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10A29B33-E6A6-48DE-9394-F4B92BC37557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E234A67-EF03-493A-B4AB-1DDECC6734AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E234A67-EF03-493A-B4AB-1DDECC6734AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E234A67-EF03-493A-B4AB-1DDECC6734AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E234A67-EF03-493A-B4AB-1DDECC6734AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A302514D-B13D-4E74-B93B-BFE0AA3B6A07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A302514D-B13D-4E74-B93B-BFE0AA3B6A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A302514D-B13D-4E74-B93B-BFE0AA3B6A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A302514D-B13D-4E74-B93B-BFE0AA3B6A07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

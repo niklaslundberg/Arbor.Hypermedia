@@ -1,0 +1,31 @@
+﻿/// <summary>
+///
+/// </summary>
+#nullable enable
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.ComponentModel.DataAnnotations;
+
+namespace {{main_namespace}};
+
+public sealed class {{entity_identifier}}RouteMetadata
+{
+    public const string RouteName = "{{entity_identifier}}";
+
+    internal record {{entity_identifier}}Metadata : EntityMetadata
+    {
+        public {{entity_identifier}}Metadata({{entity_view_type}} entity, IEnumerable<EntityMetadata>? actions, IEnumerable<EntityMetadata>? items) : base(
+            entity,
+            RouteName,
+            {{entity_identifier_parameter_name}},
+            {{http_method}},
+            actions,
+            items)
+        {
+        }
+    }
+}

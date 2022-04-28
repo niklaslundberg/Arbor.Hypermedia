@@ -6,7 +6,7 @@ namespace Arbor.Hypermedia
     {
         public string? Value { get; }
 
-        public StringFormField([NotNull] string name, string? value = null) : base(name)
+        public StringFormField(string name, string? value = null) : base(name)
         {
             Value = value;
         }

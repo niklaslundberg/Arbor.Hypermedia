@@ -24,7 +24,7 @@ namespace Arbor.Hypermedia
                 var routeValues = new ExpandoObject();
 
                 IDictionary<string, object?> dictionary = routeValues;
-                
+
                 dictionary.Add(metadata.RouteParameterName, metadata.Entity.Context.Id);
 
                 return routeValues;

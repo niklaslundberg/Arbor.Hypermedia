@@ -10,8 +10,8 @@ namespace Arbor.Hypermedia.Tests
 
         [Route("/todo/", Name = "todos")]
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public async Task<ImmutableArray<TodoItem>> Index() =>
-            _store.Items.Values.ToImmutableArray();
+        public async Task<TodoList> Index() =>
+            new(_store.Items.Values.ToImmutableArray());
 
         [Route("/todo/{id}", Name = GetTodo.RouteName)]
         [Microsoft.AspNetCore.Mvc.HttpGet]

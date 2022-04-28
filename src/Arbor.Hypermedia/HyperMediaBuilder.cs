@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Arbor.App.Extensions.ExtensionMethods;
+using Arbor.AppModel.ExtensionMethods;
 using Arbor.ModelBinding.Primitives;
 
 namespace Arbor.Hypermedia
@@ -12,12 +12,16 @@ namespace Arbor.Hypermedia
     {
         public async Task<HyperMediaEntity> GetControl<T>(T metadata, IUrlResolver urlResolver) where T : EntityMetadata
         {
-            var hyperMediaControls = GetControls(metadata, urlResolver);
+            var hyperMediaControls = new List<IHyperMediaControl>();
 
-            return new HyperMediaEntity(metadata.Entity.Context.Id, metadata.Entity.GetType().Name, hyperMediaControls);
+            var hyperMediaEntity = new HyperMediaEntity(metadata.Entity.Context.Id, metadata.Entity.GetType().Name, urlResolver.GetUrl(metadata), hyperMediaControls);
+
+            hyperMediaControls.AddRange(GetControls(metadata, urlResolver, hyperMediaEntity));
+
+            return hyperMediaEntity;
         }
 
-        public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver)
+        public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver, HyperMediaEntity? parent = null)
         {
             var hyperMediaControls = new List<IHyperMediaControl> { };
             if (metadata.RouteMethod == CustomHttpMethod.Get)
@@ -50,6 +54,14 @@ namespace Arbor.Hypermedia
                     new LinkRelation(action.RouteName)));
 
                 hyperMediaControls.AddRange(GetControls(action, urlResolver));
+            }
+
+            foreach (var action in metadata.Items)
+            {
+                var controls = new List<IHyperMediaControl>();
+                var hyperMediaControl = new HyperMediaEntity(action.Entity.Context.Id, action.Entity.GetType().Name, urlResolver.GetUrl(action), controls, parent);
+                controls.AddRange(GetControls(action, urlResolver, hyperMediaControl));
+                hyperMediaControls.Add(hyperMediaControl);
             }
 
             return hyperMediaControls;

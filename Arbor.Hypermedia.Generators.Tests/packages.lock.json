@@ -2,54 +2,6 @@
   "version": 1,
   "dependencies": {
     "net6.0": {
-      "Arbor.ModelBinding.Generators": {
-        "type": "Direct",
-        "requested": "[2.2.0, )",
-        "resolved": "2.2.0",
-        "contentHash": "eicBenK3JqGFp0gB3SDKxJo/bkHhwVjrZ6XniuzMP7mRksIofW9W1qYs0n8r7uVsFL8Mtzu0UACvMslrogHd8w==",
-        "dependencies": {
-          "System.ComponentModel.Annotations": "5.0.0"
-        }
-      },
-      "FluentAssertions": {
-        "type": "Direct",
-        "requested": "[6.6.0, )",
-        "resolved": "6.6.0",
-        "contentHash": "gBsgPrNRkzUQfnxZSKnU0oVILIc5dr+dmdKXscyYKD5URcwNVQ72a7uuCvTyBzRZW98MZQNolSYC0y/MQTJ03A==",
-        "dependencies": {
-          "System.Configuration.ConfigurationManager": "4.4.0"
-        }
-      },
-      "Microsoft.AspNetCore.TestHost": {
-        "type": "Direct",
-        "requested": "[6.0.4, )",
-        "resolved": "6.0.4",
-        "contentHash": "glganOCWeDVyPjy3D2K+Tpp5Xkwglv1I5aAT+nHh6Cq1fKlilibMf+yruBXogOZwasJIOgXzG4CLqVVXNoSpew==",
-        "dependencies": {
-          "System.IO.Pipelines": "6.0.2"
-        }
-      },
-      "Microsoft.NET.Test.Sdk": {
-        "type": "Direct",
-        "requested": "[17.1.0, )",
-        "resolved": "17.1.0",
-        "contentHash": "MVKvOsHIfrZrvg+8aqOF5dknO/qWrR1sWZjMPQ1N42MKMlL/zQL30FQFZxPeWfmVKWUWAOmAHYsqB5OerTKziw==",
-        "dependencies": {
-          "Microsoft.CodeCoverage": "17.1.0",
-          "Microsoft.TestPlatform.TestHost": "17.1.0"
-        }
-      },
-      "xunit": {
-        "type": "Direct",
-        "requested": "[2.4.1, )",
-        "resolved": "2.4.1",
-        "contentHash": "XNR3Yz9QTtec16O0aKcO6+baVNpXmOnPUxDkCY97J+8krUYxPvXT1szYYEUdKk4sB8GOI2YbAjRIOm8ZnXRfzQ==",
-        "dependencies": {
-          "xunit.analyzers": "0.10.0",
-          "xunit.assert": "[2.4.1]",
-          "xunit.core": "[2.4.1]"
-        }
-      },
       "Arbor.AppModel": {
         "type": "Transitive",
         "resolved": "0.13.0",
@@ -218,6 +170,14 @@
         "resolved": "0.6.0",
         "contentHash": "KcuciNAfg/ArkDdcM1hHMeIprKwQjdHWV6zXBFAqmKDxGB9rdDHk9a1jHTVQ5r7y5gxAowCUGLgEcfheKItoig=="
       },
+      "FluentAssertions": {
+        "type": "Transitive",
+        "resolved": "6.6.0",
+        "contentHash": "gBsgPrNRkzUQfnxZSKnU0oVILIc5dr+dmdKXscyYKD5URcwNVQ72a7uuCvTyBzRZW98MZQNolSYC0y/MQTJ03A==",
+        "dependencies": {
+          "System.Configuration.ConfigurationManager": "4.4.0"
+        }
+      },
       "JetBrains.Annotations": {
         "type": "Transitive",
         "resolved": "2022.1.0",
@@ -308,6 +268,14 @@
         "type": "Transitive",
         "resolved": "6.0.4",
         "contentHash": "pUBOF/SNk4/6eoK5M75cfqdQwZdlKRNGjzidO6MIuqnsgFIN5qiC7POYImgWv++0yoGyOpdNjnAHBQua7mLXVQ=="
+      },
+      "Microsoft.AspNetCore.TestHost": {
+        "type": "Transitive",
+        "resolved": "6.0.4",
+        "contentHash": "glganOCWeDVyPjy3D2K+Tpp5Xkwglv1I5aAT+nHh6Cq1fKlilibMf+yruBXogOZwasJIOgXzG4CLqVVXNoSpew==",
+        "dependencies": {
+          "System.IO.Pipelines": "6.0.2"
+        }
       },
       "Microsoft.CodeAnalysis.Analyzers": {
         "type": "Transitive",
@@ -717,6 +685,15 @@
           "System.Security.Cryptography.Cng": "4.5.0"
         }
       },
+      "Microsoft.NET.Test.Sdk": {
+        "type": "Transitive",
+        "resolved": "17.1.0",
+        "contentHash": "MVKvOsHIfrZrvg+8aqOF5dknO/qWrR1sWZjMPQ1N42MKMlL/zQL30FQFZxPeWfmVKWUWAOmAHYsqB5OerTKziw==",
+        "dependencies": {
+          "Microsoft.CodeCoverage": "17.1.0",
+          "Microsoft.TestPlatform.TestHost": "17.1.0"
+        }
+      },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
         "resolved": "2.1.2",
@@ -1092,11 +1069,6 @@
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
-      },
-      "System.ComponentModel.Annotations": {
-        "type": "Transitive",
-        "resolved": "5.0.0",
-        "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
       },
       "System.Configuration.ConfigurationManager": {
         "type": "Transitive",
@@ -1830,6 +1802,16 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
+      "xunit": {
+        "type": "Transitive",
+        "resolved": "2.4.1",
+        "contentHash": "XNR3Yz9QTtec16O0aKcO6+baVNpXmOnPUxDkCY97J+8krUYxPvXT1szYYEUdKk4sB8GOI2YbAjRIOm8ZnXRfzQ==",
+        "dependencies": {
+          "xunit.analyzers": "0.10.0",
+          "xunit.assert": "[2.4.1]",
+          "xunit.core": "[2.4.1]"
+        }
+      },
       "xunit.abstractions": {
         "type": "Transitive",
         "resolved": "2.0.3",
@@ -1882,6 +1864,16 @@
           "Arbor.ModelBinding.Primitives": "2.2.0",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "6.0.4",
           "Microsoft.Extensions.FileProviders.Embedded": "6.0.4"
+        }
+      },
+      "arbor.hypermedia.tests": {
+        "type": "Project",
+        "dependencies": {
+          "Arbor.Hypermedia": "1.0.0",
+          "FluentAssertions": "6.6.0",
+          "Microsoft.AspNetCore.TestHost": "6.0.4",
+          "Microsoft.NET.Test.Sdk": "17.1.0",
+          "xunit": "2.4.1"
         }
       }
     }

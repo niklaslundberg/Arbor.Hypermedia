@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using Arbor.App.Extensions.ExtensionMethods;
+using Arbor.AppModel.ExtensionMethods;
 
 namespace Arbor.Hypermedia
 {
@@ -8,15 +8,17 @@ namespace Arbor.Hypermedia
     {
         protected EntityMetadata(IEntity entity,
             string routeName,
-            string routeParameterName,
+            string? routeParameterName,
             CustomHttpMethod routeMethod,
-            IEnumerable<EntityMetadata>? actions = null)
+            IEnumerable<EntityMetadata>? actions = null,
+            IEnumerable<EntityMetadata>? items = null)
         {
             Entity = entity;
             RouteName = routeName;
             RouteParameterName = routeParameterName;
             RouteMethod = routeMethod;
             Actions = actions.SafeToImmutableArray();
+            Items = items.SafeToImmutableArray();
         }
 
         public IEntity Entity { get; }
@@ -25,7 +27,9 @@ namespace Arbor.Hypermedia
 
         public ImmutableArray<EntityMetadata> Actions { get; }
 
-        public string RouteParameterName { get; }
+        public ImmutableArray<EntityMetadata> Items { get; }
+
+        public string? RouteParameterName { get; }
 
         public CustomHttpMethod RouteMethod { get; }
     }

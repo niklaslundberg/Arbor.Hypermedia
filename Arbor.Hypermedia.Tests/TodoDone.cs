@@ -17,7 +17,7 @@ namespace Arbor.Hypermedia.Tests
             public MarkAsDoneMetadata(TodoDone entity) : base(
                 entity,
                 TodoDone.RouteName,
-                "",
+                "id",
                 CustomHttpMethod.Put)
             {
             }

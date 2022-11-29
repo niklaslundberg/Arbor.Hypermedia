@@ -61,9 +61,14 @@ namespace Arbor.Hypermedia
             var uriHelper = serviceProvider.GetRequiredService<IUrlHelperFactory>();
             HyperMediaBuilder builder = serviceProvider.GetRequiredService<HyperMediaBuilder>();
 
+            bool getNext = !context.HttpContext.Request.Query.TryGetValue("getNext", out var values)
+                           || values.Count != 1
+                           || !bool.TryParse(values[0], out bool nextEnabled)
+                           || nextEnabled;
+
             var urlResolver = new UrlResolver(uriHelper.GetUrlHelper(actionContextAccessor.ActionContext));
 
-            var model = await builder.GetControl(entityMetadata, urlResolver);
+            var model = await builder.GetControl(entityMetadata, urlResolver, getNext: getNext);
 
             var provider = serviceProvider.GetRequiredService<ITempDataProvider>();
 

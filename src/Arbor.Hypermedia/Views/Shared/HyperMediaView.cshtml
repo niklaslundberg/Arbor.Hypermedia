@@ -55,26 +55,7 @@
         }
     </div>
 }
-@if (Model is ObjectControl objectControl && objectControl.Properties.Any())
-{
-    <div>
-        @foreach (var item in objectControl.Properties)
-        {
-            <div class="property">
-                @if (bool.TryParse(item.Value, out bool boolProperty))
-                {
-                    <label for="@item.Key" class="propertyName">@item.Key</label>
-                    <input type="checkbox" value="@boolProperty.ToString().ToLowerInvariant()" class="h-@item.Key" id="@item.Key" @boolProperty.Checked() disabled="disabled" />
-                }
-                else
-                {
-                    <span class="propertyName">@item.Key</span>
-                    <span class="h-@item.Key">@item.Value</span>
-                }
-            </div>
-        }
-    </div>
-}
+<code>
 @if (Model is HyperMediaForm hyperMediaForm)
 {
     <form method="@GetMethod(hyperMediaForm)" action="@hyperMediaForm.Href" data-method="@hyperMediaForm.HttpMethod">
@@ -131,3 +112,24 @@
         }
     </form>
 }
+else if (Model is ObjectControl objectControl && objectControl.Properties.Any())
+{
+    <div>
+        @foreach (var item in objectControl.Properties)
+        {
+            <div class="property">
+                @if (bool.TryParse(item.Value, out bool boolProperty))
+                {
+                    <label for="@item.Key" class="propertyName">@item.Key</label>
+                    <input type="checkbox" value="@boolProperty.ToString().ToLowerInvariant()" class="h-@item.Key" id="@item.Key" @boolProperty.Checked() disabled="disabled" />
+                }
+                else
+                {
+                    <span class="propertyName">@item.Key</span>
+                    <span class="h-@item.Key">@item.Value</span>
+                }
+            </div>
+        }
+    </div>
+}
+</code>

@@ -10,18 +10,18 @@ namespace Arbor.Hypermedia
 {
     public class HyperMediaBuilder
     {
-        public async Task<HyperMediaEntity> GetControl<T>(T metadata, IUrlResolver urlResolver) where T : EntityMetadata
+        public async Task<HyperMediaEntity> GetControl<T>(T metadata, IUrlResolver urlResolver, bool getNext = true) where T : EntityMetadata
         {
             var hyperMediaControls = new List<IHyperMediaControl>();
 
             var hyperMediaEntity = new HyperMediaEntity(metadata.Entity.Context.Id, metadata.Entity.GetType().Name, urlResolver.GetUrl(metadata), hyperMediaControls);
 
-            hyperMediaControls.AddRange(GetControls(metadata, urlResolver, hyperMediaEntity));
+            hyperMediaControls.AddRange(GetControls(metadata, urlResolver, hyperMediaEntity, getNext: getNext));
 
             return hyperMediaEntity;
         }
 
-        public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver, HyperMediaEntity? parent = null)
+        public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver, HyperMediaEntity? parent = null, bool getNext = true)
         {
             var hyperMediaControls = new List<IHyperMediaControl> { };
             if (metadata.RouteMethod == CustomHttpMethod.Get)
@@ -32,9 +32,11 @@ namespace Arbor.Hypermedia
 
             var properties = new Dictionary<string, string>();
 
-            foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property => property.PropertyType.IsPrimitive))
+            foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property => property.PropertyType.IsPrimitive || property.PropertyType == typeof(string)))
             {
-                string? value = item.GetValue(metadata.Entity)?.ToString();
+                object? objectValue = item.GetValue(metadata.Entity);
+
+                string? value = objectValue as string ?? objectValue?.ToString();
 
                 if (value is { })
                 {
@@ -42,25 +44,36 @@ namespace Arbor.Hypermedia
                 }
             }
 
-            hyperMediaControls.Add(new ObjectControl(properties));
-
-            foreach (var action in metadata.Actions)
+            if (properties.Any())
             {
-                var actionUrl = urlResolver.GetUrl(action);
+                hyperMediaControls.Add(new ObjectControl(properties));
+            }
 
-                hyperMediaControls.Add(new HyperMediaForm(GetFields(action),
-                    action.RouteMethod,
-                    actionUrl,
-                    new LinkRelation(action.RouteName)));
+            if (getNext)
+            {
+                foreach (var action in metadata.Actions)
+                {
+                    var actionUrl = urlResolver.GetUrl(action);
 
-                hyperMediaControls.AddRange(GetControls(action, urlResolver));
+                    hyperMediaControls.Add(new HyperMediaForm(GetFields(action),
+                        action.RouteMethod,
+                        actionUrl,
+                        new LinkRelation(action.RouteName)));
+
+                    hyperMediaControls.AddRange(GetControls(action, urlResolver, getNext: getNext));
+                }
             }
 
             foreach (var action in metadata.Items)
             {
                 var controls = new List<IHyperMediaControl>();
                 var hyperMediaControl = new HyperMediaEntity(action.Entity.Context.Id, action.Entity.GetType().Name, urlResolver.GetUrl(action), controls, parent);
-                controls.AddRange(GetControls(action, urlResolver, hyperMediaControl));
+
+                if (getNext)
+                {
+                    controls.AddRange(GetControls(action, urlResolver, hyperMediaControl, getNext: getNext));
+                }
+
                 hyperMediaControls.Add(hyperMediaControl);
             }
 
@@ -89,7 +102,7 @@ namespace Arbor.Hypermedia
                 }
                 else
                 {
-                    yield return new StringFormField(item.Name);
+                    yield return new StringFormField(item.Name, item.GetValue(metadata.Entity)?.ToString());
                 }
             }
         }

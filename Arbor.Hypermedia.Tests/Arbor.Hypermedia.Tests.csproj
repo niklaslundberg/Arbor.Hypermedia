@@ -5,14 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arbor.ModelBinding.Generators" Version="2.2.0">
+    <PackageReference Include="Arbor.ModelBinding.Generators" Version="2.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FluentAssertions" Version="6.6.0" />
+    <PackageReference Include="FluentAssertions" Version="6.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="xunit" Version="2.4.2" />
   </ItemGroup>
 
   <ItemGroup>

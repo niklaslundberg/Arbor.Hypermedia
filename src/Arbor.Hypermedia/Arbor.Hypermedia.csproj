@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Arbor.AppModel" Version="0.13.0" />
-    <PackageReference Include="Arbor.ModelBinding.Primitives" Version="2.3.0" />
+    <PackageReference Include="Arbor.ModelBinding.Primitives" Version="2.4.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.4" />
   </ItemGroup>

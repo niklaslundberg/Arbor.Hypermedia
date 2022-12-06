@@ -45,12 +45,12 @@
       },
       "Arbor.ModelBinding.Primitives": {
         "type": "Direct",
-        "requested": "[2.3.0, )",
-        "resolved": "2.3.0",
-        "contentHash": "AyqdAdjfiSSw+HOEkr16XgWBgzx3N5511F2CnR8sJyr0vW/XQI2cLa/nXR4cNJYRctZmDo0ULAdN6VOcKKr4Bw==",
+        "requested": "[2.4.0, )",
+        "resolved": "2.4.0",
+        "contentHash": "JqJ4b4j/amy+41WnapV08PqRomGXMXLszTpWO2Ufc7HyA1jnQlRqT6L8UQsyM/FSjprcAka8L0wri3mMA4TaXg==",
         "dependencies": {
           "Newtonsoft.Json": "13.0.2",
-          "System.Text.Json": "6.0.2"
+          "System.Text.Json": "7.0.0"
         }
       },
       "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
@@ -1011,19 +1011,19 @@
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "Vg8eB5Tawm1IFqj4TVK1czJX89rhFxJo9ELqc/Eiq0eXy13RK00eubyU6TJE6y+GQXjyV5gSfiewDUZjQgSE0w==",
+        "resolved": "7.0.0",
+        "contentHash": "OP6umVGxc0Z0MvZQBVigj4/U31Pw72ITihDWP9WiWDm+q5aoe0GaJivsfYGq53o6dxH7DcXWiCTl7+0o2CGdmg==",
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
       "System.Text.Json": {
         "type": "Transitive",
-        "resolved": "6.0.2",
-        "contentHash": "0nE2gwXLn3PTBOPwORLqwuYvWB+Beomt9ZBX+6LmogMNKUvfD1SoDb/ycB1vBntT94rGaB/SvxEyeLu14H6aEg==",
+        "resolved": "7.0.0",
+        "contentHash": "DaGSsVqKsn/ia6RG8frjwmJonfos0srquhw09TlT8KRw5I43E+4gs+/bZj4K0vShJ5H9imCuXupb4RmS+dBy3w==",
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Text.Encodings.Web": "6.0.0"
+          "System.Text.Encodings.Web": "7.0.0"
         }
       },
       "System.Threading": {
@@ -1105,12 +1105,12 @@
       },
       "Arbor.ModelBinding.Primitives": {
         "type": "Direct",
-        "requested": "[2.3.0, )",
-        "resolved": "2.3.0",
-        "contentHash": "AyqdAdjfiSSw+HOEkr16XgWBgzx3N5511F2CnR8sJyr0vW/XQI2cLa/nXR4cNJYRctZmDo0ULAdN6VOcKKr4Bw==",
+        "requested": "[2.4.0, )",
+        "resolved": "2.4.0",
+        "contentHash": "JqJ4b4j/amy+41WnapV08PqRomGXMXLszTpWO2Ufc7HyA1jnQlRqT6L8UQsyM/FSjprcAka8L0wri3mMA4TaXg==",
         "dependencies": {
           "Newtonsoft.Json": "13.0.2",
-          "System.Text.Json": "6.0.2"
+          "System.Text.Json": "7.0.0"
         }
       },
       "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
@@ -2068,19 +2068,15 @@
       },
       "System.Text.Encodings.Web": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "Vg8eB5Tawm1IFqj4TVK1czJX89rhFxJo9ELqc/Eiq0eXy13RK00eubyU6TJE6y+GQXjyV5gSfiewDUZjQgSE0w==",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        }
+        "resolved": "7.0.0",
+        "contentHash": "OP6umVGxc0Z0MvZQBVigj4/U31Pw72ITihDWP9WiWDm+q5aoe0GaJivsfYGq53o6dxH7DcXWiCTl7+0o2CGdmg=="
       },
       "System.Text.Json": {
         "type": "Transitive",
-        "resolved": "6.0.2",
-        "contentHash": "0nE2gwXLn3PTBOPwORLqwuYvWB+Beomt9ZBX+6LmogMNKUvfD1SoDb/ycB1vBntT94rGaB/SvxEyeLu14H6aEg==",
+        "resolved": "7.0.0",
+        "contentHash": "DaGSsVqKsn/ia6RG8frjwmJonfos0srquhw09TlT8KRw5I43E+4gs+/bZj4K0vShJ5H9imCuXupb4RmS+dBy3w==",
         "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Text.Encodings.Web": "6.0.0"
+          "System.Text.Encodings.Web": "7.0.0"
         }
       },
       "System.Threading": {

@@ -8,12 +8,12 @@ public class GetTodoList
 
     internal record TodoListMetadata : EntityMetadata
     {
-        public TodoListMetadata(TodoListView list, IEnumerable<EntityMetadata>? actions = null, IEnumerable<EntityMetadata>? items = null) : base(
+        public TodoListMetadata(TodoListView list, IEnumerable<EntityMetadata>? items = null) : base(
             list,
             GetTodoList.RouteName,
             null,
             CustomHttpMethod.Get,
-            actions,
+            new List<EntityMetadata> {new CreateTodo().Metadata()},
             items)
         {
         }

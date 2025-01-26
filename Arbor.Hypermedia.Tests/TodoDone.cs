@@ -6,10 +6,7 @@ namespace Arbor.Hypermedia.Tests
     {
         public TodoId Id { get; }
 
-        public TodoDone(TodoId id)
-        {
-            Id = id;
-        }
+        public TodoDone(TodoId id) => Id = id;
         public const string RouteName = "TodoDone";
 
         internal record MarkAsDoneMetadata : EntityMetadata

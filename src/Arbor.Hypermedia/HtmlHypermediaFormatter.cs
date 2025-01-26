@@ -53,7 +53,7 @@ namespace Arbor.Hypermedia
                 throw new InvalidOperationException($"Could not find view {viewPath}");
             }
 
-            var entityMetadata = metadataEntity.CreateMetadata();
+            var entityMetadata = metadataEntity.GetEntityMetadata();
             var actionContextAccessor = serviceProvider.GetRequiredService<IActionContextAccessor>();
 
             actionContextAccessor.ActionContext ??= new ActionContext(context.HttpContext, routeData, EmptyActionDescriptor);

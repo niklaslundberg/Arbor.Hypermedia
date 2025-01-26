@@ -30,10 +30,7 @@
         {
             public string Comment { get; }
 
-            public Input(string comment)
-            {
-                Comment = comment;
-            }
+            public Input(string comment) => Comment = comment;
         }
     }
 }

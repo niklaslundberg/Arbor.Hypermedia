@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,15 +10,26 @@ namespace Arbor.Hypermedia.Tests
     {
         private readonly DataStore _store;
 
-        public TodoController(DataStore store)
-        {
-            _store = store;
-        }
+        public TodoController(DataStore store) => _store = store;
 
-        [Route("/todo/", Name = "todos")]
+
+        [Route(CreateTodo.RouteTemplate, Name = TodoList.RouteName)]
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public async Task<TodoList> Index() =>
             new(_store.Items.Values.OrderBy(value => value.Id).ToImmutableArray());
+
+
+        [Route(CreateTodo.RouteTemplate, Name = CreateTodo.RouteName)]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public async Task<ActionResult<TodoItem>> Index([FromBody] CreateTodo createTodo)
+        {
+            var id = new TodoId(_store.NewId());
+
+            var todoItem = new TodoItem(id, TodoItem.State.Todo);
+            _ = _store.Items.TryAdd(id, todoItem);
+
+            return RedirectToRoute(GetTodo.RouteName, new { id = id.Value });
+        }
 
         [Route("/todo/{id}", Name = GetTodo.RouteName)]
         [Microsoft.AspNetCore.Mvc.HttpGet]

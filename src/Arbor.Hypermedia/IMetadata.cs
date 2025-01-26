@@ -2,6 +2,6 @@
 {
     public interface IMetadata
     {
-        EntityMetadata CreateMetadata();
+        EntityMetadata GetEntityMetadata();
     }
 }

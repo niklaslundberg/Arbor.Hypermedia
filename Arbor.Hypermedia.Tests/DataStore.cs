@@ -4,6 +4,7 @@ namespace Arbor.Hypermedia.Tests
 {
     public class DataStore
     {
+        private int _counter = 3;
         public DataStore() =>
             Items = new()
             {
@@ -12,6 +13,8 @@ namespace Arbor.Hypermedia.Tests
                 [new TodoId("3")] = new TodoItem(new TodoId("3"), TodoItem.State.Done)
             };
         public ConcurrentDictionary<TodoId, TodoItem> Items { get; }
+
+        public string NewId() => (++_counter).ToString();
 
         public TodoItem? GetOrDefault(TodoId id)
         {

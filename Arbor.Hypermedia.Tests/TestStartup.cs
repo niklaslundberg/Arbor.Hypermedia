@@ -6,10 +6,7 @@ namespace Arbor.Hypermedia.Tests
 {
     public class TestStartup
     {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.UseHypermedia();
-        }
+        public void ConfigureServices(IServiceCollection services) => services.UseHypermedia();
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

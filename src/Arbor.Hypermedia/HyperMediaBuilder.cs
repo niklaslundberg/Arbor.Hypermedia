@@ -30,17 +30,24 @@ namespace Arbor.Hypermedia
                 hyperMediaControls.Add(new HyperMediaLink(selfUri, LinkRelation.Self));
             }
 
+
             var properties = new Dictionary<string, string>();
 
-            foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property => property.PropertyType.IsPrimitive || property.PropertyType == typeof(string)))
+
+            if (metadata.Entity is { })
             {
-                object? objectValue = item.GetValue(metadata.Entity);
-
-                string? value = objectValue as string ?? objectValue?.ToString();
-
-                if (value is { })
+                foreach (var item in metadata.Entity.GetType()
+                             .GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property =>
+                                 property.PropertyType.IsPrimitive || property.PropertyType == typeof(string)))
                 {
-                    properties.Add(item.Name, value);
+                    object? objectValue = item.GetValue(metadata.Entity);
+
+                    string? value = objectValue as string ?? objectValue?.ToString();
+
+                    if (value is { })
+                    {
+                        properties.Add(item.Name, value);
+                    }
                 }
             }
 
@@ -82,6 +89,11 @@ namespace Arbor.Hypermedia
 
         private IEnumerable<HyperMediaFormField> GetFields(EntityMetadata metadata)
         {
+            if (metadata.Entity is null)
+            {
+                yield break;
+            }
+
             foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (metadata.RouteMethod == CustomHttpMethod.Put && item.Name == "Id")

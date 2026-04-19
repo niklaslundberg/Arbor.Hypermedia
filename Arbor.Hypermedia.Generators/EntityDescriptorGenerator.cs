@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -18,6 +19,9 @@ namespace Arbor.Hypermedia.Generators
         private const string StringValueTypeAttributeFullName = "Arbor.ModelBinding.Primitives.StringValueTypeAttribute";
         private const string IntValueTypeAttributeFullName = "Arbor.ModelBinding.Primitives.IntValueTypeAttribute";
         private const string LongValueTypeAttributeFullName = "Arbor.ModelBinding.Primitives.LongValueTypeAttribute";
+
+        private static readonly string GeneratorVersion =
+            typeof(EntityDescriptorGenerator).Assembly.GetName().Version?.ToString() ?? "1.0";
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
@@ -284,7 +288,7 @@ namespace Arbor.Hypermedia.Generators
                 }
             }
 
-            sb.AppendLine("    [global::System.CodeDom.Compiler.GeneratedCode(\"Arbor.Hypermedia.Generators\", \"1.0\")]");
+            sb.AppendLine("    [global::System.CodeDom.Compiler.GeneratedCode(\"Arbor.Hypermedia.Generators\", \"" + GeneratorVersion + "\")]");
             sb.AppendLine("    internal sealed class " + model.DescriptorClassName + " : global::Arbor.Hypermedia.IEntityDescriptor");
             sb.AppendLine("    {");
 
@@ -361,7 +365,7 @@ namespace Arbor.Hypermedia.Generators
 
         private static void AppendRegistrationClass(StringBuilder sb, ImmutableArray<EntityTypeModel> entityTypes)
         {
-            sb.AppendLine("    [global::System.CodeDom.Compiler.GeneratedCode(\"Arbor.Hypermedia.Generators\", \"1.0\")]");
+            sb.AppendLine("    [global::System.CodeDom.Compiler.GeneratedCode(\"Arbor.Hypermedia.Generators\", \"" + GeneratorVersion + "\")]");
             sb.AppendLine("    internal static class GeneratedHypermediaDescriptorRegistration");
             sb.AppendLine("    {");
             sb.AppendLine("        public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddGeneratedHypermediaDescriptors(");

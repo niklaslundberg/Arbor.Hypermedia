@@ -34,7 +34,7 @@ namespace Arbor.Hypermedia
 
             var descriptor = _descriptorRegistry.GetDescriptor(metadata.Entity.GetType());
             var primitiveProps = descriptor.GetPrimitiveProperties(metadata.Entity);
-            var properties = new System.Collections.Generic.Dictionary<string, string>(primitiveProps.Count);
+            var properties = new Dictionary<string, string>(primitiveProps.Count);
             foreach (var kvp in primitiveProps)
             {
                 if (kvp.Value is not null)

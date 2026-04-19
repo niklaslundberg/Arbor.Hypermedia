@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Arbor.AppModel.ExtensionMethods;
-using Arbor.ModelBinding.Primitives;
 
 namespace Arbor.Hypermedia
 {
     public class HyperMediaBuilder
     {
+        private readonly EntityDescriptorRegistry _descriptorRegistry;
+
+        public HyperMediaBuilder(EntityDescriptorRegistry descriptorRegistry)
+        {
+            _descriptorRegistry = descriptorRegistry;
+        }
+
         public async Task<HyperMediaEntity> GetControl<T>(T metadata, IUrlResolver urlResolver) where T : EntityMetadata
         {
             var hyperMediaControls = new List<IHyperMediaControl>();
@@ -23,22 +25,21 @@ namespace Arbor.Hypermedia
 
         public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver, HyperMediaEntity? parent = null)
         {
-            var hyperMediaControls = new List<IHyperMediaControl> { };
+            var hyperMediaControls = new List<IHyperMediaControl>();
             if (metadata.RouteMethod == CustomHttpMethod.Get)
             {
                 var selfUri = urlResolver.GetUrl(metadata);
                 hyperMediaControls.Add(new HyperMediaLink(selfUri, LinkRelation.Self));
             }
 
-            var properties = new Dictionary<string, string>();
-
-            foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property => property.PropertyType.IsPrimitive))
+            var descriptor = _descriptorRegistry.GetDescriptor(metadata.Entity.GetType());
+            var primitiveProps = descriptor.GetPrimitiveProperties(metadata.Entity);
+            var properties = new System.Collections.Generic.Dictionary<string, string>(primitiveProps.Count);
+            foreach (var kvp in primitiveProps)
             {
-                string? value = item.GetValue(metadata.Entity)?.ToString();
-
-                if (value is { })
+                if (kvp.Value is not null)
                 {
-                    properties.Add(item.Name, value);
+                    properties[kvp.Key] = kvp.Value;
                 }
             }
 
@@ -69,29 +70,8 @@ namespace Arbor.Hypermedia
 
         private IEnumerable<HyperMediaFormField> GetFields(EntityMetadata metadata)
         {
-            foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (metadata.RouteMethod == CustomHttpMethod.Put && item.Name == "Id")
-                {
-                    continue;
-                }
-                if (item.PropertyType.Closes(typeof(ValueObjectBase<>)))
-                {
-                    yield return new StringFormField(item.Name, item.GetValue(metadata.Entity)?.ToString());
-                }
-                else if (item.PropertyType.IsAssignableTo(typeof(DateTime?)))
-                {
-                    yield return new DateFormField(item.Name);
-                }
-                else if (item.PropertyType == typeof(EntityContext))
-                {
-
-                }
-                else
-                {
-                    yield return new StringFormField(item.Name);
-                }
-            }
+            var descriptor = _descriptorRegistry.GetDescriptor(metadata.Entity.GetType());
+            return descriptor.GetFormFields(metadata.Entity, metadata.RouteMethod);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -12,6 +13,8 @@ namespace Arbor.Hypermedia
         public static IServiceCollection UseHypermedia(this IServiceCollection services)
         {
             services.AddScoped<HyperMediaBuilder>();
+            services.AddSingleton<EntityDescriptorRegistry>(sp =>
+                new EntityDescriptorRegistry(sp.GetService<IEnumerable<IEntityDescriptor>>() ?? []));
 
             services.AddMvc().RegisterHypermediaAssembly().AddRazorRuntimeCompilation();
 

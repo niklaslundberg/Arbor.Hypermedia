@@ -19,4 +19,6 @@ jobs:
     - name: build
       run: dotnet build --no-restore -c Release
     - name: test
-      run: dotnet test --no-build -c Release --logger trx
+      run: |
+        dotnet run --project Arbor.Hypermedia.Tests/Arbor.Hypermedia.Tests.csproj --no-build -c Release
+        dotnet run --project Arbor.Hypermedia.Generators.Tests/Arbor.Hypermedia.Generators.Tests.csproj --no-build -c Release

@@ -1,0 +1,16 @@
+steps:
+  - name: Setup .NET 10
+    uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: '10.0.x'
+
+  - name: Restore dependencies
+    run: dotnet restore
+
+  - name: Build (must be clean before any commit)
+    run: dotnet build --no-restore -c Release
+
+  - name: Run tests (must all pass before any commit)
+    run: |
+      dotnet run --project Arbor.Hypermedia.Tests/Arbor.Hypermedia.Tests.csproj --no-build -c Release
+      dotnet run --project Arbor.Hypermedia.Generators.Tests/Arbor.Hypermedia.Generators.Tests.csproj --no-build -c Release

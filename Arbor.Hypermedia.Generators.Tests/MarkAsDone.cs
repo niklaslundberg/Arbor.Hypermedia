@@ -5,6 +5,6 @@ namespace Arbor.Hypermedia.Generators.Tests
 {
     public sealed record MarkAsDone(TodoId TodoId) : ICommand<TodoDone>, IMetadata
     {
-        public EntityMetadata GetEntityMetadata() => GetTodo.Metadata(TodoId);
+        public EntityMetadata CreateMetadata() => GetTodo.Metadata(TodoId);
     }
 }

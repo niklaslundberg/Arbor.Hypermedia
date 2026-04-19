@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Arbor.Hypermedia.Generated;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,7 +7,11 @@ namespace Arbor.Hypermedia.Tests
 {
     public class TestStartup
     {
-        public void ConfigureServices(IServiceCollection services) => services.UseHypermedia();
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddGeneratedHypermediaDescriptors();
+            services.UseHypermedia();
+        }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

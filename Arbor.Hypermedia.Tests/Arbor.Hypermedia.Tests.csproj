@@ -25,6 +25,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Arbor.Hypermedia\Arbor.Hypermedia.csproj" />
+    <ProjectReference Include="..\Arbor.Hypermedia.Generators\Arbor.Hypermedia.Generators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>

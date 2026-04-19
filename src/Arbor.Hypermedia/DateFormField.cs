@@ -1,13 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Arbor.AppModel.Time;
+﻿using System;
 
 namespace Arbor.Hypermedia
 {
     public class DateFormField : HyperMediaFormField
     {
-        public DateFormField(string name, Date? defaultValue = default) : base(name) =>
+        public DateFormField(string name, DateOnly? defaultValue = default) : base(name) =>
             DefaultValue = defaultValue;
 
-        public Date? DefaultValue { get; }
+        public DateOnly? DefaultValue { get; }
     }
 }

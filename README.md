@@ -13,15 +13,15 @@ The core idea is that each response describes:
 - **Metadata-driven responses**: domain types implement `IMetadata` and return an `EntityMetadata` graph.
 - **Hypermedia controls as first-class objects**: entities, links, forms, and fields are modeled in C# and rendered to HTML.
 - **Route-based navigation**: URLs are resolved from named routes and route parameters through `IUrlResolver`.
-- **Action discovery from metadata**: available commands are exposed as forms with correct HTTP methods and form fields.
+- **Action discovery from metadata**: available commands are exposed as forms with the correct HTTP method and form fields.
 - **Recursive composition**: entities can contain actions and related items, producing nested hypermedia documents.
 
 ## How it is implemented
 
 1. **Metadata model**
-   - `EntityMetadata` is the central structure with entity, route, method, actions, and items.
-   - `IEntity` provides stable identity/context via `EntityContext`.
-   - `IMetadata` lets any response model return its metadata tree.
+   - `EntityMetadata` is the central structure holding an entity, route name, HTTP method, actions, and items.
+   - `IEntity` provides stable identity and context via `EntityContext`.
+   - `IMetadata` lets any controller return type expose its metadata tree.
 
 2. **Control generation**
    - `HyperMediaBuilder` walks `EntityMetadata` and builds `IHyperMediaControl` objects.
@@ -33,7 +33,7 @@ The core idea is that each response describes:
    - `HtmlHypermediaFormatter` is an MVC output formatter for `IMetadata` responses.
    - It resolves URLs, invokes `HyperMediaBuilder`, and renders embedded Razor views.
    - `Views/Shared/HyperMediaLayout.cshtml` and `HyperMediaView.cshtml` render entities, links, and forms.
-   - Non-GET/POST actions are handled through method override (`_method`) in generated forms.
+   - Non-GET/POST actions are handled via method override (`_method`) in generated forms.
 
 4. **Service registration**
    - `UseHypermedia()` registers MVC integration, embedded views, output formatter, and URL-encoded input formatter.
@@ -42,9 +42,20 @@ The core idea is that each response describes:
 ## Example flow (Todo sample/tests)
 
 - Controllers return models such as `TodoList` or `TodoItem` that implement `IMetadata`.
-- Each model returns metadata describing route names, actions (for example `mark done`, `comment`), and relations.
-- The formatter converts that metadata into navigable HTML where the client can follow links and submit forms to move state forward.
+- Each model returns metadata describing route names, available actions (e.g. mark done, add comment), and relations.
+- The formatter converts that metadata into navigable HTML where the client can follow links and submit forms to advance state.
 
 ## Source generator project
 
-The repository also contains `Arbor.Hypermedia.Generators`, a Roslyn generator project with template-based code generation scaffolding for metadata-related code.
+The repository also contains `Arbor.Hypermedia.Generators`, a Roslyn incremental source generator that uses Scriban templates to scaffold metadata-related code for value types annotated with `StringValueType`, `IntValueType`, or `LongValueType` attributes.
+
+## Technology stack
+
+| Concern | Technology |
+|---|---|
+| Runtime | .NET 10 |
+| Web framework | ASP.NET Core 10 |
+| Package management | NuGet central package management (`Directory.Packages.props`) |
+| Source generator | Roslyn `IIncrementalGenerator` |
+| Templating (generator) | Scriban 7 |
+| Testing | xunit v3, AwesomeAssertions |

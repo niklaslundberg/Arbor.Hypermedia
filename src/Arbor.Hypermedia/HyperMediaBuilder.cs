@@ -10,18 +10,18 @@ namespace Arbor.Hypermedia
 {
     public class HyperMediaBuilder
     {
-        public async Task<HyperMediaEntity> GetControl<T>(T metadata, IUrlResolver urlResolver, bool getNext = true) where T : EntityMetadata
+        public async Task<HyperMediaEntity> GetControl<T>(T metadata, IUrlResolver urlResolver) where T : EntityMetadata
         {
             var hyperMediaControls = new List<IHyperMediaControl>();
 
             var hyperMediaEntity = new HyperMediaEntity(metadata.Entity.Context.Id, metadata.Entity.GetType().Name, urlResolver.GetUrl(metadata), hyperMediaControls);
 
-            hyperMediaControls.AddRange(GetControls(metadata, urlResolver, hyperMediaEntity, getNext: getNext));
+            hyperMediaControls.AddRange(GetControls(metadata, urlResolver, hyperMediaEntity));
 
             return hyperMediaEntity;
         }
 
-        public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver, HyperMediaEntity? parent = null, bool getNext = true)
+        public IReadOnlyCollection<IHyperMediaControl> GetControls(EntityMetadata metadata, IUrlResolver urlResolver, HyperMediaEntity? parent = null)
         {
             var hyperMediaControls = new List<IHyperMediaControl> { };
             if (metadata.RouteMethod == CustomHttpMethod.Get)
@@ -30,57 +30,37 @@ namespace Arbor.Hypermedia
                 hyperMediaControls.Add(new HyperMediaLink(selfUri, LinkRelation.Self));
             }
 
-
             var properties = new Dictionary<string, string>();
 
-
-            if (metadata.Entity is { })
+            foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property => property.PropertyType.IsPrimitive))
             {
-                foreach (var item in metadata.Entity.GetType()
-                             .GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(property =>
-                                 property.PropertyType.IsPrimitive || property.PropertyType == typeof(string)))
+                string? value = item.GetValue(metadata.Entity)?.ToString();
+
+                if (value is { })
                 {
-                    object? objectValue = item.GetValue(metadata.Entity);
-
-                    string? value = objectValue as string ?? objectValue?.ToString();
-
-                    if (value is { })
-                    {
-                        properties.Add(item.Name, value);
-                    }
+                    properties.Add(item.Name, value);
                 }
             }
 
-            if (properties.Any())
+            hyperMediaControls.Add(new ObjectControl(properties));
+
+            foreach (var action in metadata.Actions)
             {
-                hyperMediaControls.Add(new ObjectControl(properties));
-            }
+                var actionUrl = urlResolver.GetUrl(action);
 
-            if (getNext)
-            {
-                foreach (var action in metadata.Actions)
-                {
-                    var actionUrl = urlResolver.GetUrl(action);
+                hyperMediaControls.Add(new HyperMediaForm(GetFields(action),
+                    action.RouteMethod,
+                    actionUrl,
+                    new LinkRelation(action.RouteName)));
 
-                    hyperMediaControls.Add(new HyperMediaForm(GetFields(action),
-                        action.RouteMethod,
-                        actionUrl,
-                        new LinkRelation(action.RouteName)));
-
-                    hyperMediaControls.AddRange(GetControls(action, urlResolver, getNext: getNext));
-                }
+                hyperMediaControls.AddRange(GetControls(action, urlResolver));
             }
 
             foreach (var action in metadata.Items)
             {
                 var controls = new List<IHyperMediaControl>();
                 var hyperMediaControl = new HyperMediaEntity(action.Entity.Context.Id, action.Entity.GetType().Name, urlResolver.GetUrl(action), controls, parent);
-
-                if (getNext)
-                {
-                    controls.AddRange(GetControls(action, urlResolver, hyperMediaControl, getNext: getNext));
-                }
-
+                controls.AddRange(GetControls(action, urlResolver, hyperMediaControl));
                 hyperMediaControls.Add(hyperMediaControl);
             }
 
@@ -89,11 +69,6 @@ namespace Arbor.Hypermedia
 
         private IEnumerable<HyperMediaFormField> GetFields(EntityMetadata metadata)
         {
-            if (metadata.Entity is null)
-            {
-                yield break;
-            }
-
             foreach (var item in metadata.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (metadata.RouteMethod == CustomHttpMethod.Put && item.Name == "Id")
@@ -114,7 +89,7 @@ namespace Arbor.Hypermedia
                 }
                 else
                 {
-                    yield return new StringFormField(item.Name, item.GetValue(metadata.Entity)?.ToString());
+                    yield return new StringFormField(item.Name);
                 }
             }
         }

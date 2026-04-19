@@ -1,6 +1,6 @@
 ﻿namespace Arbor.Hypermedia.Tests
 {
-    public class TodoComment : IEntity
+    public class TodoComment :IEntity
     {
         public const string RouteName = "TodoComment";
         public TodoId Id { get; }
@@ -30,7 +30,10 @@
         {
             public string Comment { get; }
 
-            public Input(string comment) => Comment = comment;
+            public Input(string comment)
+            {
+                Comment = comment;
+            }
         }
     }
 }

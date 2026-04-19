@@ -53,7 +53,7 @@ namespace Arbor.Hypermedia
                 throw new InvalidOperationException($"Could not find view {viewPath}");
             }
 
-            var entityMetadata = metadataEntity.GetEntityMetadata();
+            var entityMetadata = metadataEntity.CreateMetadata();
             var actionContextAccessor = serviceProvider.GetRequiredService<IActionContextAccessor>();
 
             actionContextAccessor.ActionContext ??= new ActionContext(context.HttpContext, routeData, EmptyActionDescriptor);
@@ -61,14 +61,9 @@ namespace Arbor.Hypermedia
             var uriHelper = serviceProvider.GetRequiredService<IUrlHelperFactory>();
             HyperMediaBuilder builder = serviceProvider.GetRequiredService<HyperMediaBuilder>();
 
-            bool getNext = !context.HttpContext.Request.Query.TryGetValue("getNext", out var values)
-                           || values.Count != 1
-                           || !bool.TryParse(values[0], out bool nextEnabled)
-                           || nextEnabled;
-
             var urlResolver = new UrlResolver(uriHelper.GetUrlHelper(actionContextAccessor.ActionContext));
 
-            var model = await builder.GetControl(entityMetadata, urlResolver, getNext: getNext);
+            var model = await builder.GetControl(entityMetadata, urlResolver);
 
             var provider = serviceProvider.GetRequiredService<ITempDataProvider>();
 

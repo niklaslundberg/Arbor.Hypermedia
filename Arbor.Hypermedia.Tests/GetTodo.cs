@@ -20,6 +20,9 @@ namespace Arbor.Hypermedia.Tests
             }
         }
 
-        public static EntityMetadata Metadata(TodoId todoId) => throw new System.NotImplementedException();
+        public static EntityMetadata Metadata(TodoId todoId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

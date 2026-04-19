@@ -1,5 +1,4 @@
-﻿using Arbor.AspNetCore.Mvc.Formatting.HtmlForms;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -18,7 +17,6 @@ namespace Arbor.Hypermedia
 
             services.AddHypermediaFileProvider();
             services.AddHypermediaOutputFormatter();
-            services.AddXwwwUrlEncodedFormatter();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
@@ -44,8 +42,5 @@ namespace Arbor.Hypermedia
         public static IServiceCollection AddHypermediaOutputFormatter(this IServiceCollection serviceCollection) =>
             serviceCollection.Configure<MvcOptions>(options =>
                 options.OutputFormatters.Insert(0, new HtmlHypermediaFormatter()));
-        public static IServiceCollection AddXwwwUrlEncodedFormatter(this IServiceCollection serviceCollection) =>
-            serviceCollection.Configure<MvcOptions>(options =>
-                options.InputFormatters.Insert(0, new XWwwFormUrlEncodedFormatter()));
     }
 }

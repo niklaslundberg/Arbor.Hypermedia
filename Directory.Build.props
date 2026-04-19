@@ -4,15 +4,15 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>http://github.com/niklaslundberg/Arbor.App.Extensions</PackageProjectUrl>
-    <RepositoryUrl>http://github.com/niklaslundberg/Arbor.App.Extensions</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/niklaslundberg/Arbor.Hypermedia</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/niklaslundberg/Arbor.Hypermedia</RepositoryUrl>
     <Authors>Niklas Lundberg</Authors>
   </PropertyGroup>
 </Project>

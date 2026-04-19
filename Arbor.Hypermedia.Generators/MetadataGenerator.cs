@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Scriban;
 
 namespace Arbor.Hypermedia.Generators
 {
     [Generator]
-    public class MetadataGenerator : ISourceGenerator
+    public class MetadataGenerator : IIncrementalGenerator
     {
         private static readonly DiagnosticDescriptor WarningMessage = new("ARB1000",
             "Arbor Source generator",
@@ -25,23 +28,37 @@ namespace Arbor.Hypermedia.Generators
             DiagnosticSeverity.Info,
             true);
 
-        public void Initialize(GeneratorInitializationContext context) =>
-            context.RegisterForSyntaxNotifications(() => new ModelBindingSyntaxReceiver());
+        private static readonly HashSet<string> SupportedDataTypes =
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "int", "string", "long" };
 
-        public void Execute(GeneratorExecutionContext context)
+        public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            if (context.SyntaxReceiver is not ModelBindingSyntaxReceiver mySyntaxReceiver)
-            {
-                return;
-            }
+            var classDataProvider = context.SyntaxProvider
+                .CreateSyntaxProvider(
+                    predicate: static (node, _) => node is ClassDeclarationSyntax cds && cds.IsPartial(),
+                    transform: static (ctx, _) =>
+                    {
+                        var cds = (ClassDeclarationSyntax)ctx.Node;
+                        string? dataType = cds.DataType();
+                        return dataType is not null && SupportedDataTypes.Contains(dataType)
+                            ? new ClassData(cds, cds.Namespace(), dataType, cds.StringComparison(), cds.MinValue())
+                            : null;
+                    })
+                .Where(static x => x is not null)
+                .Select(static (x, _) => x!);
 
-            if (mySyntaxReceiver.ClassesToGenerateConvertersFor.Count == 0)
+            context.RegisterSourceOutput(classDataProvider.Collect(), Execute);
+        }
+
+        private static void Execute(SourceProductionContext context, ImmutableArray<ClassData> classDataList)
+        {
+            if (classDataList.IsEmpty)
             {
                 return;
             }
 
             string all = string.Join(", ",
-                mySyntaxReceiver.ClassesToGenerateConvertersFor.Select(classData => classData.Syntax.Identifier.ValueText));
+                classDataList.Select(classData => classData.Syntax.Identifier.ValueText));
 
             context.ReportDiagnostic(Diagnostic.Create(CustomInformation, Location.None,
                 $"Generating code for items {all}"));
@@ -50,7 +67,7 @@ namespace Arbor.Hypermedia.Generators
             {
                 var model = new
                 {
-                    Mappings = mySyntaxReceiver.ClassesToGenerateConvertersFor.Select(n =>
+                    Mappings = classDataList.Select(n =>
                         new
                         {
                             Identifier = n.Syntax.Identifier.ValueText,
@@ -59,7 +76,7 @@ namespace Arbor.Hypermedia.Generators
                             n.StringComparison,
                             n.MinValue,
                         }).ToArray(),
-                    MainNamespace = mySyntaxReceiver.ClassesToGenerateConvertersFor.FirstOrDefault()?.Namespace
+                    MainNamespace = classDataList.FirstOrDefault()?.Namespace
                 };
 
                 using var manifestResourceStream = typeof(MetadataGenerator).Assembly.GetManifestResourceStream("Arbor.ModelBinding.Generators.Template.scriban-cs");

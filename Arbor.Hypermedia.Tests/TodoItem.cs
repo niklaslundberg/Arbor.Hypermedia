@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Arbor.Hypermedia.Tests
 {
@@ -6,13 +7,10 @@ namespace Arbor.Hypermedia.Tests
     {
         public class State
         {
-            public static readonly State Done = new(nameof(Done));
-            public static readonly State Todo = new(nameof(Todo));
-            private readonly string _name;
+            public static readonly State Done = new ();
+            public static readonly State Todo = new ();
 
-            private State(string name) => _name = name;
-
-            public override string ToString() => _name;
+            private State(){}
         }
 
         private State _state;
@@ -28,8 +26,7 @@ namespace Arbor.Hypermedia.Tests
 
         public string? Comment { get; private set; }
 
-        public EntityMetadata GetEntityMetadata() =>
-            new GetTodo.TodoMetadata(new TodoItemView(this), GetActions(), GetRelations());
+        public EntityMetadata CreateMetadata() => new GetTodo.TodoMetadata(new TodoItemView(Id), GetActions(), GetRelations());
 
         private IEnumerable<EntityMetadata> GetActions()
         {
@@ -38,9 +35,8 @@ namespace Arbor.Hypermedia.Tests
                 yield return new TodoDone.MarkAsDoneMetadata(new TodoDone(Id));
             }
 
-            yield return new TodoComment.Metadata(new TodoComment(Id, Comment ?? ""));
+            yield return new TodoComment.Metadata(new TodoComment(Id,Comment ?? ""));
         }
-
         private IEnumerable<EntityMetadata> GetRelations()
         {
             yield return new GetTodoList.TodoListMetadata(new TodoListView());
@@ -48,13 +44,14 @@ namespace Arbor.Hypermedia.Tests
 
         public class TodoItemView : IEntity
         {
-            public TodoItemView(TodoItem todo) => Context = new EntityContext(todo.Id.Value, nameof(TodoItem));
+            public TodoItemView(TodoId id) => Context = new EntityContext(id.Value, nameof(TodoItem));
 
             public EntityContext Context { get; }
         }
 
-        public void Handle(TodoComment todoComment) => Comment = todoComment.Comment;
-
-        public void Handle(TodoDone todoDone) => _state = State.Done;
+        public void Handle(TodoComment todoComment)
+        {
+            Comment = todoComment.Comment;
+        }
     }
 }

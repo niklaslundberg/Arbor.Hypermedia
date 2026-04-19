@@ -1,0 +1,36 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Arbor packages -->
+    <PackageVersion Include="Arbor.AppModel" Version="0.20.0" />
+    <PackageVersion Include="Arbor.ModelBinding.Generators" Version="2.6.0" />
+    <PackageVersion Include="Arbor.ModelBinding.Primitives" Version="2.6.0" />
+
+    <!-- ASP.NET Core / Microsoft.Extensions -->
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.6" />
+
+    <!-- Roslyn / Code analysis -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.3.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="5.3.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" />
+
+    <!-- Scriban templating -->
+    <PackageVersion Include="Scriban" Version="7.1.0" />
+
+    <!-- BCL -->
+    <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
+
+    <!-- Testing -->
+    <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageVersion Include="xunit.v3" Version="3.2.2" />
+
+    <!-- Swagger -->
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+  </ItemGroup>
+</Project>

@@ -244,6 +244,54 @@ markup* where the ecosystem rewards it. Avoid encoding the same fact three times
 as the canonical source — pick `data-*` as canonical and treat the others as
 additive enhancement, exactly as JS enhancement is additive over baseline HTML.
 
+### 5.5 Preventing dual-encoding drift
+
+The layered scheme of §5.4 creates a hazard: the same fact gets written more than
+once in the markup, and the copies diverge.
+
+```html
+<span data-prop="status" class="p-status">shipped</span>
+<time data-prop="placed" class="dt-placed" datetime="2026-06-01T10:30:00Z">June 1</time>
+```
+
+Rename the property, add a field, or change a value and update only the
+`data-*` (the channel you were told is canonical), and the `p-*`/`dt-*` class
+silently lies to every Microformats parser. Two encodings authored by one hand
+**will** drift.
+
+The governing principle is the same one that keeps the JS-enhancement layer
+honest (§4.3): **the redundant encodings must not be authored independently — the
+secondary must be a mechanical projection of the canonical.** A property should be
+declared *once* as a descriptor — `{ name: "status", kind: text, value: "shipped" }`
+— and the rendering layer derives the `data-prop` attribute, the Microformats
+class, and any RDFa from that single declaration. A developer never hand-types
+`class="p-status"`; they declare the property and the renderer stamps every
+encoding consistently.
+
+That reframes the decision. Once generation is in play, the encodings *can't*
+diverge — so the real question is no longer "which encoding," but **how much
+redundancy to emit at all**, since every parallel encoding is still bytes on the
+wire, review burden, and a potential source of "which channel is authoritative?"
+confusion for clients:
+
+| Strategy | Drift risk | Interop dividend | Byte / review surface | Client clarity |
+| --- | --- | --- | --- | --- |
+| **Generate all, always** (data-* + microformats + optional RDFa on every property) | None (generated) | Maximum | Largest; uniform | Must publish that data-* is canonical |
+| **Generate all, opt-in per resource type** (data-* always; secondary encodings only where a named consumer benefits) | None (generated) | Targeted | Small; mostly canonical-only | Clearest: secondary present only where it pays |
+| **Collapse to data-* only** (drop microformats/RDFa) | None (one encoding) | None | Smallest | Trivial: one channel |
+
+**Recommendation:** **generate all encodings from one descriptor, but emit the
+secondary encodings opt-in per resource type.** Generation is what makes
+multi-encoding *safe*; restraint is what keeps it *worthwhile*. Default every
+resource to the canonical `data-*` + rels channel, and switch on Microformats2 (or
+RDFa) only for the specific resource types with a named beneficiary — a person/
+event type a generic parser understands, a product page a search engine indexes.
+This keeps the wire mostly free of redundant markup while still collecting the
+interop dividend exactly where it exists, and it never relies on developer
+discipline to stay consistent. Reserve "generate all, always" for APIs whose
+whole domain maps cleanly onto a standard vocabulary; reach for "collapse to
+data-* only" when there is provably no off-the-shelf-parser consumer.
+
 ---
 
 ## 6. Affordances: typed link relations everywhere
@@ -341,6 +389,47 @@ and submit.*
   These are two fields of one concept, and conflating them is a common mistake —
   the display name *will* change for copy/localisation reasons; the identifier
   must not.
+
+### 6.5 Documenting custom relations: a registry as the single source of truth
+
+Dereferenceable rel URIs are only useful if what they resolve to is *correct*.
+The recurring failure is that the rel is emitted by code while its meaning lives
+in prose somewhere else, and the two drift: months later the form's fields have
+changed and the doc still describes the old ones. Three sub-questions hide in
+"document your rels":
+
+1. **What lives at the rel URI?** For a dual human+machine API the honest answer
+   is *both*: a human-readable explanation **and** a machine-readable descriptor of
+   the affordance (its verb, expected fields and their kinds, and the resulting
+   state transition).
+2. **Where is the canonical definition?** Not in a hand-maintained docs site
+   (maximum drift), but **in the code, as a rel registry**: each relation declared
+   once carrying its identifier (URI), friendly name, description, the affordance's
+   verb and field spec, and deprecation status.
+3. **Who owns it?** The team that owns the *transition* — not a separate docs team.
+   The coupling you want is "you cannot merge a new rel without its definition," in
+   the same change.
+
+**Recommendation: the in-code rel registry is the source of truth, and everything
+else is generated from it.**
+
+- The server **emits rels from the registry**, so a rel can't appear in a response
+  unless it's defined.
+- The **public documentation at each rel URI is generated** from the registry at
+  build/publish time — producing both a human-readable HTML page *and* a
+  machine-readable descriptor (served by content negotiation at the same URI, or as
+  a linked companion). Both audiences read from one source, so neither can rot
+  independently.
+- A **CI check fails the build** if a rel is emitted anywhere in responses but
+  missing from the registry, or defined but never emitted. "In sync" becomes a
+  property of the build rather than of discipline.
+
+This makes the affordance self-documenting in the strongest sense: a developer or
+a client dereferences `rel="…/cancel-order"` and gets a description that was
+generated from the very declaration the server uses to render the form — the
+field list in the docs is, by construction, the field list in the markup. (Where
+a project already has code-generation infrastructure, the registry and its
+generated docs are a natural fit for it.)
 
 ---
 
@@ -475,12 +564,14 @@ change.
 
 ## 10. Open questions / risks
 
-- **`data-*` vs Microformats2 canonical source (§5.4).** The layered recommendation
-  must be enforced or the redundant encodings will drift. Is tooling needed to
-  derive one from the other?
-- **Custom-rel documentation hosting.** Dereferenceable rel URIs are great in
-  theory; who owns that documentation surface and keeps it in sync with the code
-  that emits the rels?
+- **Dual-encoding drift (addressed in §5.5).** Resolved in principle by generating
+  all encodings from one property descriptor and emitting secondary encodings
+  opt-in per resource type. Residual: deciding *which* resource types have a named
+  beneficiary is a judgement call that needs a documented policy.
+- **Custom-rel documentation (addressed in §6.5).** Resolved by an in-code rel
+  registry as single source of truth, with generated human + machine docs and a CI
+  divergence check. Residual: versioning the *descriptor format* itself, and how a
+  deprecated rel's documentation communicates its replacement.
 - **Fragment/partial responses (§4.3).** Ensuring a swapped fragment carries the
   same semantics as the full-page region is easy to forget; it may warrant a
   shared rendering path so a region is rendered identically standalone or embedded.
@@ -502,12 +593,17 @@ change.
    the same skeleton — never a parallel contract.
 3. **Encode machine semantics in a single canonical channel you own** (`data-*`
    attributes + rels), with Microformats2 `h-*` classes layered on for common
-   generic types and RDFa/schema.org used selectively for interchange/SEO.
+   generic types and RDFa/schema.org used selectively for interchange/SEO. Render
+   every encoding from one property descriptor so they cannot drift, and emit the
+   secondary encodings opt-in per resource type rather than blanketing everything.
 4. **Typed link relations everywhere.** Clients act on `rel`, never on URL
    structure. Navigation lives on links; actions live on forms that fully declare
    their verb, target, and typed fields.
 5. **Mint custom rels as dereferenceable URIs** and separate the stable
-   *identifier* from the changeable *friendly name*.
+   *identifier* from the changeable *friendly name*. Keep their definitions in an
+   in-code rel registry as the single source of truth, generate both human and
+   machine docs from it, and let CI fail the build when emitted rels and the
+   registry diverge.
 6. **Embed constituent sub-resources, link independent ones**, and make embedded
    entities self-identifying.
 7. **Treat evolution as a first-class contract:** drive by rel + field name, change

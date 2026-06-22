@@ -431,6 +431,69 @@ field list in the docs is, by construction, the field list in the markup. (Where
 a project already has code-generation infrastructure, the registry and its
 generated docs are a natural fit for it.)
 
+### 6.6 Documentation formats: ALPS, Hydra, and why not OpenAPI
+
+§6.5 settles *where* the definition lives (the registry) but not *what format* the
+generated descriptor takes. The defining requirement is set by §6.1 and §8:
+because clients drive by relation and treat URLs as opaque, the descriptor must
+document **meaning and the set of possible transitions** — not a fixed map of URLs
+and endpoints.
+
+#### Why OpenAPI is a poor *primary* fit
+
+OpenAPI describes a **static surface keyed by URL and operation**: paths, methods,
+and request/response schemas. That is precisely the coupling this design exists to
+remove. As the runtime contract it actively works against the model:
+
+- **Re-introduces URL coupling** — it documents the very URL structure clients were
+  told to ignore.
+- **Describes endpoints, not meaning** — it tells a client *how to call*
+  `POST /orders`, not what `cancel-order` *means* or *when it is available*.
+- **Out-of-band and design-time** — it is a separate artifact a developer reads,
+  not something delivered in representations and discovered at runtime.
+
+OpenAPI's `links` object (operation A's response can feed operation B) is its nod
+toward runtime relationships, but it is keyed by `operationId` against the static
+path set and is not delivered in responses — it documents *possible* traversals
+statically rather than letting the server advertise *actual* affordances.
+
+OpenAPI still earns its keep as a **human-facing developer-portal artifact**: a
+familiar, tooling-rich way to browse what forms/affordances exist and what their
+fields look like. Generate it for that audience; do not make it the runtime
+contract.
+
+#### The purpose-built alternatives
+
+| Format | What it documents | Hypermedia fit | Cost / ecosystem |
+| --- | --- | --- | --- |
+| **ALPS** (Application-Level Profile Semantics) | A vocabulary of *descriptors*: data elements + transitions, independent of protocol/URL/media type | **Strongest** — documents meaning and possible transitions, leaves where/how to the runtime representation; maps ~1:1 to the rel registry | Small, stable; JSON or XML; modest tooling |
+| **Hydra** (JSON-LD vocabulary) | Supported classes, properties, and operations, discoverable at runtime via `ApiDocumentation` | Strong, hypermedia-native; natural **if already using RDFa/schema.org** (§5.2) | Heavier (RDF triples); smaller ecosystem |
+| **JSON Hyper-Schema** | `links` (rel + href-templates + target schemas) attached to instances; also validates payloads | Moderate; JSON-instance-oriented | Useful if already invested in JSON Schema; spec relatively dormant |
+| **schema.org / Microformats2 vocab** | The encoding vocabulary's own published definitions *are* the docs | Free for the common generic types only; no domain transitions | Zero authoring; inherited |
+| **Arazzo** | Sequences/workflows across operations | Closer to transitions than base OpenAPI, but built on OpenAPI operations, so inherits URL coupling | Newer; not a fit as the primary contract |
+
+Two supporting standards are *plumbing*, not formats: **RFC 8288** (extension rels
+SHOULD be dereferenceable URIs) and the **`profile` link relation, RFC 6906**
+(point consumers at whichever descriptor you chose). They are how any format above
+gets *attached* to a representation.
+
+#### Recommendation
+
+Because the registry (§6.5) *generates* its outputs, the format choice is cheap —
+emit one projection per audience rather than authoring any of them by hand:
+
+1. **Runtime machine descriptor at the rel URI → ALPS** (or **Hydra** if you have
+   already committed to the linked-data lane). This is the authoritative,
+   hypermedia-honest contract: meaning and transitions, not URLs.
+2. **Human page at the rel URI → generated HTML** — itself just more of your
+   hypermedia.
+3. **Optional developer-portal artifact → generated OpenAPI**, framed explicitly as
+   an onboarding/familiarity convenience for the *forms and affordances*, never as
+   the navigation contract.
+
+One registry, three projections, each aimed at the audience it serves — and none
+of them the static-URL contract that OpenAPI alone would impose.
+
 ---
 
 ## 7. Entities, nesting, and embedded vs. linked sub-resources
@@ -603,7 +666,10 @@ change.
    *identifier* from the changeable *friendly name*. Keep their definitions in an
    in-code rel registry as the single source of truth, generate both human and
    machine docs from it, and let CI fail the build when emitted rels and the
-   registry diverge.
+   registry diverge. Make the machine descriptor an **ALPS profile** (or Hydra in
+   the linked-data lane) — meaning and transitions, not URLs — and treat any
+   generated OpenAPI as a developer-onboarding convenience, not the runtime
+   contract.
 6. **Embed constituent sub-resources, link independent ones**, and make embedded
    entities self-identifying.
 7. **Treat evolution as a first-class contract:** drive by rel + field name, change
